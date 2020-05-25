@@ -2,6 +2,7 @@ package com.crowd.test;
 
 import com.crowd.entity.Admin;
 import com.crowd.mapper.AdminMapper;
+import com.crowd.service.api.AdminService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:spring-persist-mybatis.xml")
+@ContextConfiguration(locations = {"classpath:spring-persist-mybatis.xml", "classpath:spring-persist-tx.xml"})
 public class CrowdTest {
 
     @Autowired
@@ -23,6 +24,15 @@ public class CrowdTest {
 
     @Autowired
     private AdminMapper adminMapper;
+
+    @Autowired
+    private AdminService adminService;
+
+    @Test
+    public void testTransaction() {
+        Admin admin = new Admin(null, "jerry", "123456123", "Jerry", "jerry@qq.com", null);
+        adminService.saveAdmin(admin);
+    }
 
     @Test
     public void testLog() {
