@@ -1,0 +1,7 @@
+需要配置 jdbc 配置文件
+文件名：jdbc.properties
+example:
+jdbc.user=user
+jdbc.password=password
+jdbc.url=jdbc:mysql://localhost:3306/crowd?useUnicode=true&characterEncoding=UTF-8
+jdbc.driver=com.mysql.jdbc.Driver
