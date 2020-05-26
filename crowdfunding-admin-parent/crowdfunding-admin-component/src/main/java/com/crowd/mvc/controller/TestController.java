@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -24,10 +25,12 @@ public class TestController {
     }
 
     @RequestMapping("/test/ssm.html")
-    public String testSsm(ModelMap modelMap) {
+    public String testSsm(ModelMap modelMap, HttpServletRequest request) {
 
         List<Admin> admins = adminService.getAllAdmins();
         modelMap.addAttribute("admins", admins);
+        // 测试异常
+//        System.out.println(10 / 0);
         return "target";
     }
 }
