@@ -1,5 +1,6 @@
 package com.crowd.mvc.config;
 
+import com.crowd.constant.CrowdConstant;
 import com.crowd.utils.CrowdUtils;
 import com.crowd.utils.ResultEntity;
 import com.google.gson.Gson;
@@ -49,7 +50,7 @@ public class CrowdExceptionResolver {
         }
         // 如果不是 Ajax 请求，创建 ModelAndView 对象
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("exception", exception);
+        modelAndView.addObject(CrowdConstant.ATTR_NAME_EXCEPTION, exception);
         // 设置对应视图名称
         modelAndView.setViewName(viewName);
 
