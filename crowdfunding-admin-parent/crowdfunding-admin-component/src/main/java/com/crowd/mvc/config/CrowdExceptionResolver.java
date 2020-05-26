@@ -1,6 +1,7 @@
 package com.crowd.mvc.config;
 
 import com.crowd.constant.CrowdConstant;
+import com.crowd.exception.LoginFailedException;
 import com.crowd.utils.CrowdUtils;
 import com.crowd.utils.ResultEntity;
 import com.google.gson.Gson;
@@ -16,10 +17,19 @@ import java.io.IOException;
 public class CrowdExceptionResolver {
 
     // 每一种异常对应一种处理方法
+    @ExceptionHandler(value = LoginFailedException.class)
+    public ModelAndView resolveNullPointerException(LoginFailedException exception, HttpServletRequest request,
+                                                    HttpServletResponse response) throws IOException {
+        String viewName = "admin-login";
+        return commonResolveException(exception, request, response, viewName);
+    }
+
+    // 每一种异常对应一种处理方法
     @ExceptionHandler(value = NullPointerException.class)
     public ModelAndView resolveNullPointerException(NullPointerException exception, HttpServletRequest request,
                                                     HttpServletResponse response) throws IOException {
-        return commonResolveException(exception, request, response, "system-error");
+        String viewName = "system-error";
+        return commonResolveException(exception, request, response, viewName);
     }
 
     /**
