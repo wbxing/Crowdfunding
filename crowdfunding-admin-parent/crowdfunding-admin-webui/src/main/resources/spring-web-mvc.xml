@@ -31,6 +31,7 @@
     <!-- 配置 view-controller, 直接关联请求地址和视图名称 -->
     <mvc:view-controller path="/admin/to/login/page.html" view-name="admin-login" />
     <mvc:view-controller path="/admin/to/main/page.html" view-name="admin-main"/>
+    <mvc:view-controller path="/admin/to/add/page.html" view-name="admin-add" />
 
     <!-- 配置拦截器 -->
     <mvc:interceptors>

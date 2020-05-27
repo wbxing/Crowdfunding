@@ -2,6 +2,7 @@ package com.crowd.mvc.config;
 
 import com.crowd.constant.CrowdConstant;
 import com.crowd.exception.AccessForbiddenException;
+import com.crowd.exception.LoginAcctAlreadyInUseException;
 import com.crowd.exception.LoginFailedException;
 import com.crowd.utils.CrowdUtils;
 import com.crowd.utils.ResultEntity;
@@ -20,11 +21,21 @@ public class CrowdExceptionResolver {
     // 每一种异常对应一种处理方法
     // 加上这个可以指定未登录时权限检查的跳转页面
 //    @ExceptionHandler(value = AccessForbiddenException.class)
-//    public ModelAndView resolveAccessForbiddenException(AccessForbiddenException exception, HttpServletRequest request,
+//    public ModelAndView resolveAccessForbiddenException(AccessForbiddenException exception, HttpServletRequest
+//    request,
 //                                                    HttpServletResponse response) throws IOException {
 //        String viewName = "admin-login";
 //        return commonResolveException(exception, request, response, viewName);
 //    }
+
+    // 每一种异常对应一种处理方法
+    @ExceptionHandler(value = LoginAcctAlreadyInUseException.class)
+    public ModelAndView resolveLoginAcctAlreadyInUseException(LoginAcctAlreadyInUseException exception,
+                                                              HttpServletRequest request,
+                                                              HttpServletResponse response) throws IOException {
+        String viewName = "admin-add";
+        return commonResolveException(exception, request, response, viewName);
+    }
 
     // 每一种异常对应一种处理方法
     @ExceptionHandler(value = LoginFailedException.class)

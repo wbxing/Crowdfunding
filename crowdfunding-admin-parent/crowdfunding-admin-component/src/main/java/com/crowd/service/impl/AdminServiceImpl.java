@@ -3,6 +3,7 @@ package com.crowd.service.impl;
 import com.crowd.constant.CrowdConstant;
 import com.crowd.entity.Admin;
 import com.crowd.entity.AdminExample;
+import com.crowd.exception.LoginAcctAlreadyInUseException;
 import com.crowd.exception.LoginFailedException;
 import com.crowd.mapper.AdminMapper;
 import com.crowd.service.api.AdminService;
@@ -10,8 +11,11 @@ import com.crowd.utils.CrowdUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,7 +31,22 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void saveAdmin(Admin admin) {
-        adminMapper.insert(admin);
+        // 密码加密
+        admin.setUserPswd(CrowdUtils.md5(admin.getUserPswd()));
+        // 生成创建时间
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String createTime = format.format(date);
+        admin.setCreateTime(createTime);
+
+        try {
+            // 执行保存
+            adminMapper.insert(admin);
+        } catch (Exception e) {
+            if (e instanceof DuplicateKeyException) {
+                throw new LoginAcctAlreadyInUseException(CrowdConstant.MESSAGE_LOGIN_ACCT_ALREADY_IN_USE);
+            }
+        }
     }
 
     @Override

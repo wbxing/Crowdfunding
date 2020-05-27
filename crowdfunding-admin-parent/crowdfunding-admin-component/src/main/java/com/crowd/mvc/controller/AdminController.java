@@ -71,4 +71,15 @@ public class AdminController {
         return "redirect:/admin/get/page.html?pageNum=" + pageNum + "&keyword="
                 + keyword;
     }
+
+    @RequestMapping("admin/save.html")
+    private String removeAdmin(Admin admin) {
+        // 执行删除操作
+        adminService.saveAdmin(admin);
+
+        return "redirect:/admin/get/page.html?pageNum=" + Integer.MAX_VALUE;
+    }
+
+
+
 }
