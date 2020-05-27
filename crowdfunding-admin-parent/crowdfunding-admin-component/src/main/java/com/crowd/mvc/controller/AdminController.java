@@ -6,6 +6,7 @@ import com.crowd.service.api.AdminService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -53,5 +54,21 @@ public class AdminController {
         // 将 pageInfo 存入模型
         modelMap.addAttribute(CrowdConstant.ATTR_NAME_PAGE_INFO, pageInfo);
         return "admin-page";
+    }
+
+    @RequestMapping("/admin/remove/{adminId}/{pageNum}/{keyword}.html")
+    private String removeAdmin(@PathVariable("adminId") Integer adminId,
+                               @PathVariable("pageNum") Integer pageNum,
+                               @PathVariable("keyword") String keyword) {
+        // 执行删除操作
+        adminService.removeById(adminId);
+        // 实现页面跳转
+        // 1 不能直接转发
+        // return "admin-page";
+        // 2 转发到 /admin/get/page.html，会出现重复删除
+        // return "forward:/admin/get/page.html";
+        // 3 重定向，需要附加 pagheNum 和 keyword
+        return "redirect:/admin/get/page.html?pageNum=" + pageNum + "&keyword="
+                + keyword;
     }
 }
