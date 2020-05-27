@@ -2,7 +2,7 @@
 <div class="col-sm-3 col-md-2 sidebar">
     <div class="tree">
         <ul style="padding-left: 0px;" class="list-group">
-            <li class="list-group-item tree-closed"><a href="main.html"><i
+            <li class="list-group-item tree-closed"><a href="admin/to/main/page.html"><i
                     class="glyphicon glyphicon-dashboard"></i> 控制面板</a></li>
             <li class="list-group-item tree-closed"><span><i class="glyphicon glyphicon glyphicon-tasks"></i>
                     权限管理 <span class="badge" style="float: right">3</span></span>

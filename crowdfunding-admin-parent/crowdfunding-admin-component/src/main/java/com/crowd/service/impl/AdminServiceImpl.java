@@ -101,4 +101,9 @@ public class AdminServiceImpl implements AdminService {
     public void removeById(Integer adminId) {
         adminMapper.deleteByPrimaryKey(adminId);
     }
+
+    @Override
+    public Admin getAdminById(Integer adminId) {
+        return adminMapper.selectByPrimaryKey(adminId);
+    }
 }

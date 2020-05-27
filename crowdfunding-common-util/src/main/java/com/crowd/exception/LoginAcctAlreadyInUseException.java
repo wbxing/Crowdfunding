@@ -1,7 +1,7 @@
 package com.crowd.exception;
 
 /**
- * 保存或者更新用户信息时，登录账号已存在抛出的异常
+ * 保存用户信息时，登录账号已存在抛出的异常
  *
  * @author wbxing
  */

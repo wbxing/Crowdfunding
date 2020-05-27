@@ -72,7 +72,7 @@ public class AdminController {
                 + keyword;
     }
 
-    @RequestMapping("admin/save.html")
+    @RequestMapping("/admin/save.html")
     private String removeAdmin(Admin admin) {
         // 执行删除操作
         adminService.saveAdmin(admin);
@@ -80,6 +80,12 @@ public class AdminController {
         return "redirect:/admin/get/page.html?pageNum=" + Integer.MAX_VALUE;
     }
 
+    @RequestMapping("/admin/to/edit/page.html")
+    public String toEditPage(@RequestParam("adminId") Integer adminId, ModelMap modelMap) {
 
+        Admin admin = adminService.getAdminById(adminId);
+        modelMap.addAttribute(CrowdConstant.ATTR_NAME_ADMIN_NAME, admin);
+        return "admin-edit";
+    }
 
 }
