@@ -7,6 +7,8 @@ import com.crowd.exception.LoginFailedException;
 import com.crowd.mapper.AdminMapper;
 import com.crowd.service.api.AdminService;
 import com.crowd.utils.CrowdUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,5 +64,17 @@ public class AdminServiceImpl implements AdminService {
         }
         // 比较结果一致，返回 Admin 对象
         return admin;
+    }
+
+    @Override
+    public PageInfo<Admin> getPageInfo(String keyword, Integer pageNum, Integer pageSize) {
+
+        // 调用 PageHelper 的方法开启分页查询
+        // PageHelper 的非侵入式设计，原本的查询不需要修改
+        PageHelper.startPage(pageNum, pageSize);
+        // 执行查询
+        List<Admin> adminByKeyword = adminMapper.selectAdminByKeyword(keyword);
+        // 封装到 PageInfo 对象中
+        return new PageInfo<>(adminByKeyword);
     }
 }

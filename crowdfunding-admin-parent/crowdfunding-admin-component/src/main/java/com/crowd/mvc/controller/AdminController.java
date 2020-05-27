@@ -3,7 +3,9 @@ package com.crowd.mvc.controller;
 import com.crowd.constant.CrowdConstant;
 import com.crowd.entity.Admin;
 import com.crowd.service.api.AdminService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -38,5 +40,18 @@ public class AdminController {
         session.invalidate();
         // 跳转后台主界面
         return "redirect:/admin/to/login/page.html";
+    }
+
+    @RequestMapping("/admin/get/page.html")
+    private String getPageInfo(@RequestParam(value = "keyword", defaultValue = "") String keyword,
+                               @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                               @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                               ModelMap modelMap) {
+
+        // 调用 service 方法获取 pageInfo 对象
+        PageInfo<Admin> pageInfo = adminService.getPageInfo(keyword, pageNum, pageSize);
+        // 将 pageInfo 存入模型
+        modelMap.addAttribute(CrowdConstant.ATTR_NAME_PAGE_INFO, pageInfo);
+        return "admin-page";
     }
 }
