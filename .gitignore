@@ -25,6 +25,6 @@ hs_err_pid*
 # IDEA cinfig
 /.idea/
 *.iml
-/crowdfunding-common-reverse/
+
 /crowdfunding-admin-parent/crowdfunding-admin-webui/src/main/resources/jdbc.properties
 /crowdfunding-admin-parent/crowdfunding-admin-webui/target/
