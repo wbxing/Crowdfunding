@@ -99,3 +99,8 @@ function paginationCallBack(pageIndex, jQuery) {
     // 取消页码超链接的默认行为
     return false;
 }
+
+// 获取总页数
+function getTotalPages(pageInfo) {
+    return pageInfo.total;
+}
