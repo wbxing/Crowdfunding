@@ -63,10 +63,9 @@ function fillTableBody(pageInfo) {
         let roleNameTd = "<td>" + roleName + "</td>";
         let checkBtn = "<button type='button' class='btn btn-success btn-xs'><i class='glyphicon glyphicon-check'></i></button>";
         let pencilBtn = "<button id='" + roleId + "' type='button' class='btn btn-primary btn-xs pencilBtn'" +
-            " title='修改'><i" +
-            " class='glyphicon" +
-            " glyphicon-pencil'></i></button>";
-        let removeBtn = "<button type='button' class='btn btn-danger btn-xs'><i class='glyphicon glyphicon-remove'></i></button>";
+            " title='修改'><i class='glyphicon glyphicon-pencil'></i></button>";
+        let removeBtn = "<button id='" + roleId + "' type='button' class='btn btn-danger btn-xs removeBtn'" +
+            " title='删除'><i class=' glyphicon glyphicon-remove'></i></button>";
         let buttonTd = "<td>" + checkBtn + " " + pencilBtn + " " + removeBtn + "</td>";
         let tr = "<tr>" + numberTd + checkboxTd + roleNameTd + buttonTd + "</tr>";
         $("#rolePageBody").append(tr);
@@ -106,4 +105,24 @@ function paginationCallBack(pageIndex, jQuery) {
 // 获取总页数
 function getTotalPages(pageInfo) {
     return pageInfo.total;
+}
+
+// 全局变量存储 roleId
+window.roleIdArray = [];
+
+// 声明函数生成确认模态框
+function showConfirmModal(roleArray) {
+    // 打开模态框
+    $("#confirmModal").modal("show");
+    // 清楚旧数据
+    $("#roleNameSpan").empty();
+
+    // 遍历 roleArray 数组
+    for (let i = 0; i < roleArray.length; i++) {
+        let role = roleArray[i];
+        let roleName = role.name;
+        $("#roleNameSpan").append(roleName + "<br/>");
+        let roleId = role.id;
+        window.roleIdArray.push(roleId);
+    }
 }

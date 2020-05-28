@@ -109,6 +109,49 @@
             // 关闭模态框
             $("#editModal").modal("hide");
         });
+
+        // 执行删除
+        $("#removeRoleBtn").click(function() {
+            var requestBody = JSON.stringify(window.roleIdArray);
+            $.ajax({
+                "url" : "role/remove.json",
+                "type" : "post",
+                "data" : requestBody,
+                "contentType" : "application/json;charset=UTF-8",
+                "dataType" : "json",
+                "success" : function(response) {
+                    var result = response.result;
+                    if (result === "SUCCESS") {
+                        layer.msg("操作成功！");
+                        // 重新加载分页数据
+                        generatePage();
+                    }
+                    if (result === "FAILED") {
+                        layer.msg("操作失败！" + response.message);
+                    }
+                },
+                "error" : function(response) {
+                    layer.msg(response.status + " " + response.statusText);
+                }
+            });
+            // 关闭模态框
+            $("#confirmModal").modal("hide");
+        });
+
+        // 单条删除
+        $("#rolePageBody").on("click", ".removeBtn", function() {
+            // 获取 name
+            var name = $(this).parent().prev().text()
+            // 创建 role 对象，存入数组
+            var roleArray = [ {
+                id : this.id,
+                name : name
+            } ];
+            // 调用函数显示模态框
+            console.log("name = " + name);
+            console.log("id = " + this.id);
+            showConfirmModal(roleArray);
+        });
     });
 </script>
 <body>
@@ -175,5 +218,6 @@
 </div>
 <%@include file="/WEB-INF/modal-role-add.jsp" %>
 <%@include file="/WEB-INF/modal-role-edit.jsp" %>
+<%@include file="/WEB-INF/modal-role-confrim.jsp"%>
 </body>
 </html>

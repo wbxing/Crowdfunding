@@ -1,6 +1,7 @@
 package com.crowd.service.impl;
 
 import com.crowd.entity.Role;
+import com.crowd.entity.RoleExample;
 import com.crowd.mapper.RoleMapper;
 import com.crowd.service.api.RoleService;
 import com.github.pagehelper.PageHelper;
@@ -40,4 +41,11 @@ public class RoleServiceImpl implements RoleService {
         roleMapper.updateByPrimaryKey(role);
     }
 
+    @Override
+    public void removeRole(List<Integer> roleIdList) {
+        RoleExample example = new RoleExample();
+        RoleExample.Criteria criteria = example.createCriteria();
+        criteria.andIdIn(roleIdList);
+        roleMapper.deleteByExample(example);
+    }
 }
