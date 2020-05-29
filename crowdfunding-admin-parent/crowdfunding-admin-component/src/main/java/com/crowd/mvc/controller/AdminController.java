@@ -1,17 +1,23 @@
 package com.crowd.mvc.controller;
 
-import com.crowd.constant.CrowdConstant;
-import com.crowd.entity.Admin;
-import com.crowd.service.api.AdminService;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.crowd.constant.CrowdConstant;
+import com.crowd.entity.Admin;
+import com.crowd.service.api.AdminService;
+import com.crowd.utils.ResultEntity;
+import com.github.pagehelper.PageInfo;
+
+@Controller
 public class AdminController {
 
     private AdminService adminService;
@@ -43,49 +49,38 @@ public class AdminController {
         return "redirect:/admin/to/login/page.html";
     }
 
-    @RequestMapping("/admin/get/page.html")
-    private String getPageInfo(@RequestParam(value = "keyword", defaultValue = "") String keyword,
-                               @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                               @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-                               ModelMap modelMap) {
-
-        // 调用 service 方法获取 pageInfo 对象
-        PageInfo<Admin> pageInfo = adminService.getPageInfo(keyword, pageNum, pageSize);
-        // 将 pageInfo 存入模型
-        modelMap.addAttribute(CrowdConstant.ATTR_NAME_PAGE_INFO, pageInfo);
-        return "admin-page";
+    @ResponseBody
+    @RequestMapping("/admin/get/page/info.json")
+    public ResultEntity<PageInfo<Admin>> getPageInfo(
+            @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+            @RequestParam(value = "keyword", defaultValue = "") String keyword) {
+        // 调用 Service 方法获取分页数据
+        PageInfo<Admin> pageInfo = adminService.getPageInfo(pageNum, pageSize, keyword);
+        // 封装到 ResultEntity 对象中返回（如果上面的操作抛出异常，交给异常映射机制处理）
+        return ResultEntity.successWithData(pageInfo);
     }
 
-    @RequestMapping("/admin/remove/{adminId}/{pageNum}/{keyword}.html")
-    private String removeAdmin(@PathVariable("adminId") Integer adminId,
-                               @PathVariable("pageNum") Integer pageNum,
-                               @PathVariable("keyword") String keyword) {
+    @ResponseBody
+    @RequestMapping("admin/remove.json")
+    private ResultEntity<String> removeAdmin1(@RequestBody List<Integer> adminIdList) {
         // 执行删除操作
-        adminService.removeById(adminId);
-        // 实现页面跳转
-        // 1 不能直接转发
-        // return "admin-page";
-        // 2 转发到 /admin/get/page.html，会出现重复删除
-        // return "forward:/admin/get/page.html";
-        // 3 重定向，需要附加 pagheNum 和 keyword
-        return "redirect:/admin/get/page.html?pageNum=" + pageNum + "&keyword="
-                + keyword;
+        adminService.removeAdmin(adminIdList);
+        return ResultEntity.successWithoutData();
     }
 
-    @RequestMapping("/admin/save.html")
-    private String removeAdmin(Admin admin) {
-        // 执行删除操作
+    @ResponseBody
+    @RequestMapping("/admin/save.json")
+    public ResultEntity<String> saveAdmin(Admin admin) {
         adminService.saveAdmin(admin);
-
-        return "redirect:/admin/get/page.html?pageNum=" + Integer.MAX_VALUE;
+        return ResultEntity.successWithoutData();
     }
 
-    @RequestMapping("/admin/to/edit/page.html")
-    public String toEditPage(@RequestParam("adminId") Integer adminId, ModelMap modelMap) {
-
-        Admin admin = adminService.getAdminById(adminId);
-        modelMap.addAttribute(CrowdConstant.ATTR_NAME_ADMIN_NAME, admin);
-        return "admin-edit";
+    @ResponseBody
+    @RequestMapping("/admin/update.json")
+    public ResultEntity<String> updateRole(Admin admin) {
+        adminService.update(admin);
+        return ResultEntity.successWithoutData();
     }
 
 }
