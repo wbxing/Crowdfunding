@@ -59,7 +59,7 @@ function fillTableBody(pageInfo) {
         let roleId = role.id;
         let roleName = role.name;
         let numberTd = "<td>" + (i + 1) + "</td>";
-        let checkboxTd = "<td><input type='checkbox'></td>";
+        let checkboxId = "<td><input id='" + roleId + "' class='itemBox' type='checkbox'></td>";
         let roleNameTd = "<td>" + roleName + "</td>";
         let checkBtn = "<button type='button' class='btn btn-success btn-xs'><i class='glyphicon glyphicon-check'></i></button>";
         let pencilBtn = "<button id='" + roleId + "' type='button' class='btn btn-primary btn-xs pencilBtn'" +
@@ -67,7 +67,7 @@ function fillTableBody(pageInfo) {
         let removeBtn = "<button id='" + roleId + "' type='button' class='btn btn-danger btn-xs removeBtn'" +
             " title='删除'><i class=' glyphicon glyphicon-remove'></i></button>";
         let buttonTd = "<td>" + checkBtn + " " + pencilBtn + " " + removeBtn + "</td>";
-        let tr = "<tr>" + numberTd + checkboxTd + roleNameTd + buttonTd + "</tr>";
+        let tr = "<tr>" + numberTd + checkboxId + roleNameTd + buttonTd + "</tr>";
         $("#rolePageBody").append(tr);
     }
     // 生成分页导航条

@@ -152,6 +152,42 @@
             console.log("id = " + this.id);
             showConfirmModal(roleArray);
         });
+
+        // 给全选绑定单击响应函数
+        $("#summaryBox").click(function () {
+            $(".itemBox").prop("checked", this.checked);
+        });
+
+        // 反向绑定
+        $("#rolePageBody").on("click", ".itemBox", function () {
+            // 获取当前选中的数量
+            let checkedCount = $(".itemBox:checked").length;
+            // 总数量
+            let totalCount = $(".itemBox").length;
+            // 设置全选状态
+            $("#summaryBox").prop("checked", checkedCount === totalCount);
+        });
+
+        // 批量删除
+        $("#batchRemoveBtn").click(function () {
+            var roleArray = [];
+            // 遍历当前选中的角色
+            $(".itemBox:checked").each(function () {
+
+                let roleId = this.id;
+                let roleName = $(this).parent().next().text();
+                roleArray.push({
+                    "id": roleId,
+                    "name": roleName
+                });
+            });
+            // 检查 roleArray 长度
+            if (roleArray.length === 0) {
+                layer.msg("未选择任何角色");
+                return;
+            }
+            showConfirmModal(roleArray);
+        });
     });
 </script>
 <body>
@@ -180,7 +216,7 @@
                             <i class="glyphicon glyphicon-search"></i> 查询
                         </button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float: right; margin-left: 10px;">
+                    <button id="batchRemoveBtn" type="button" class="btn btn-danger" style="float: right; margin-left: 10px;">
                         <i class=" glyphicon glyphicon-remove"></i> 删除
                     </button>
                     <button type="button" class="btn btn-primary" style="float: right;"
@@ -194,7 +230,7 @@
                             <thead>
                             <tr>
                                 <th width="30">#</th>
-                                <th width="30"><input type="checkbox"></th>
+                                <th width="30"><input id="summaryBox" type="checkbox"></th>
                                 <th>名称</th>
                                 <th width="100">操作</th>
                             </tr>
