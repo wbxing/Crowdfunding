@@ -48,6 +48,7 @@ function fillTableBody(pageInfo) {
     $("#rolePageBody").empty();
     // 这里清空是为了让没有搜索结果时不显示页码导航条
     $("#Pagination").empty();
+    $("#summaryBox").prop("checked", false);
     // 判断 pageInfo 对象是否有效
     if (pageInfo === null || pageInfo === undefined || pageInfo.list === null || pageInfo.list.length === 0) {
         $("#rolePageBody").append("<tr><td colspan='4' align='center'>抱歉！没有查询到您搜索的数据！</td></tr>");
@@ -61,7 +62,8 @@ function fillTableBody(pageInfo) {
         let numberTd = "<td>" + (i + 1) + "</td>";
         let checkboxId = "<td><input id='" + roleId + "' class='itemBox' type='checkbox'></td>";
         let roleNameTd = "<td>" + roleName + "</td>";
-        let checkBtn = "<button type='button' class='btn btn-success btn-xs'><i class='glyphicon glyphicon-check'></i></button>";
+        let checkBtn = "<button type='button' class='btn btn-success btn-xs checkBtn' title='选择'><i class='" +
+            " glyphicon glyphicon-check'></i></button>";
         let pencilBtn = "<button id='" + roleId + "' type='button' class='btn btn-primary btn-xs pencilBtn'" +
             " title='修改'><i class='glyphicon glyphicon-pencil'></i></button>";
         let removeBtn = "<button id='" + roleId + "' type='button' class='btn btn-danger btn-xs removeBtn'" +

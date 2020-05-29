@@ -188,6 +188,15 @@
             }
             showConfirmModal(roleArray);
         });
+
+        // checked 按钮
+        $("#rolePageBody").on("click", ".checkBtn", function() {
+            var checkBox = $(this).parent().parent().find(":checkbox");
+            //console.log(checkBox);
+            var status = checkBox[0].checked;
+            //console.log(status);
+            $(checkBox[0]).prop("checked", !status);
+        });
     });
 </script>
 <body>
