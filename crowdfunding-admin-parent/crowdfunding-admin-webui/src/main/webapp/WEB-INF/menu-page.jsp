@@ -10,6 +10,7 @@
     	// 调用专门封装好的函数初始化树形结构
     	generateTree();
 
+    	// 新增
         $("#treeDemo").on("click", ".addBtn", function() {
         	// 将当前节点的id，作为新节点的pid 保存到全局变量
         	window.pid = this.id;
@@ -17,7 +18,6 @@
         	$("#menuAddModal").modal("show");
         	return false;
         });
-
         $("#menuSaveBtn").click(function() {
         	// 收集表单项中用户输入的数据
             var name = $.trim($("#menuAddModal [name=name]").val());
@@ -58,6 +58,84 @@
             $("#menuResetBtn").click();
         });
 
+        // 修改
+        $("#treeDemo").on("click", ".editBtn", function () {
+            // 将当前节点的id，作为新节点的pid 保存到全局变量
+            window.pid = this.id;
+            // 打开模态框
+            $("#menuEditModal").modal("show");
+            return false;
+        });
+        // 给更新节点的模态框中的更新按钮绑定单击响应函数
+        $("menuEditBtn").click(function () {
+            let name = $("#menuEditModal [name=name]").val();
+            let url = $("#menuEditModal [name=url]").val();
+            let icon = $("#menuEditModal [name=icon]").val();
+            // 发送 Ajax 请求
+            $.ajax({
+                "url": "menu/update.json",
+                "type": "post",
+                "data": {
+                    "id": window.id,
+                    "name": name,
+                    "url": url,
+                    "icon": icon
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    var result = response.result;
+                    if (result === "SUCCESS") {
+                        layer.msg("操作成功！");
+                        // 重新加载树形结构，注意：要在确认服务器端完成保存操作后再刷新
+                        // 否则有可能刷新不到最新的数据，因为这里是异步的
+                        generateTree();
+                    }
+                    if (result === "FAILED") {
+                        layer.msg("操作失败！" + response.message);
+                    }
+                },
+                "error": function (response) {
+                    layer.msg(response.status + " " + response.statusText);
+                }
+            });
+            // 关闭模态框
+            $("#menuEditModal").modal("hide");
+        });
+
+        // 删除
+        $("#treeDemo").on("click", ".removeBtn", function () {
+            // 将当前节点的id 保存到全局变量
+            window.id = this.id;
+            // 打开模态框
+            $("#menuConfirmModal").modal("show");
+            // 获取zTreeObj 对象
+            var zTreeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            // 根据id 属性查询节点对象
+            // 用来搜索节点的属性名
+            var key = "id";
+            // 用来搜索节点的属性值
+            var value = window.id;
+            var currentNode = zTreeObj.getNodeByParam(key, value);
+            $("#removeNodeSpan").html(" <i class='" + currentNode.icon + "'></i><b>" + currentNode.name + "</b> ");
+            return false;
+        });
+        // 给“×”按钮绑定单击响应函数
+        $("#treeDemo").on("click", ".removeBtn", function () {
+            // 将当前节点的id 保存到全局变量
+            window.id = this.id;
+            // 打开模态框
+            $("#menuConfirmModal").modal("show");
+            // 获取zTreeObj 对象
+            var zTreeObj = $.fn.zTree.getZTreeObj("treeDemo");
+            // 根据id 属性查询节点对象
+            // 用来搜索节点的属性名
+            var key = "id";
+            // 用来搜索节点的属性值
+            var value = window.id;
+            var currentNode = zTreeObj.getNodeByParam(key, value);
+            $("#removeNodeSpan").html(" <i class='" + currentNode.icon + "'></i><b>" + currentNode.name + "</b> ");
+            return false;
+        });
     });
 </script>
 <body>

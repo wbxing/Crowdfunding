@@ -6,7 +6,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">系统弹窗</h4>
+                <h4 class="modal-title">修改角色</h4>
             </div>
             <div class="modal-body">
                 <form class="form-signin" role="form">
@@ -17,7 +17,9 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="updateRoleBtn" type="button" class="btn btn-success">更新</button>
+                <button id="updateRoleBtn" type="button" class="btn btn-primary"><i
+                        class="glyphicon glyphicon-edit"></i> 更新
+                </button>
             </div>
         </div>
     </div>
