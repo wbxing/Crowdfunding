@@ -137,4 +137,13 @@ public class AdminServiceImpl implements AdminService {
         return new PageInfo<>(adminList);
     }
 
+    @Override
+    public void saveAdminRoleRelationship(Integer adminId, List<String> roleIdList) {
+        // 删除旧数据
+        adminMapper.deleteRelationship(adminId);
+        // 保存新数据
+        if (roleIdList.size() > 0) {
+            adminMapper.insertRelationship(adminId, roleIdList);
+        }
+    }
 }

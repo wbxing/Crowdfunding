@@ -26,4 +26,5 @@ public interface AdminService {
 
     PageInfo<Admin> getPageInfo(Integer pageNum, Integer pageSize, String keyword);
 
+    void saveAdminRoleRelationship(Integer adminId, List<String> roleId);
 }

@@ -210,12 +210,92 @@
             showConfirmModal(adminArray);
         });
 
+        // 打开模态框
         $("#adminPageBody").on("click", ".checkBtn", function () {
-            var checkBox = $(this).parent().parent().find(":checkbox");
-            //console.log(checkBox);
-            var status = checkBox[0].checked;
-            //console.log(status);
-            $(checkBox[0]).prop("checked", !status);
+            // 打开模态框
+            $("#assginRoleModal").modal("show");
+            // 清除旧数据
+            $("#assigned").empty();
+            $("#unassigned").empty();
+            window.assginingAdminId = this.id;
+            $.ajax({
+                "url": "assign/role.json",
+                "type": "post",
+                "data": {
+                    "adminId": this.id
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    var result = response.result;
+                    var data = response.data;
+                    var assignedRoleList = data.assignedRoleList
+                    var unassignedRoleList = data.unassignedRoleList
+                    if (result === "SUCCESS") {
+                        //layer.msg("查询成功！");
+                        //$("#assgin").
+                        for (let i = 0; i < unassignedRoleList.length; i++) {
+                            var unassgined = unassignedRoleList[i];
+                            $("#unassigned").append("<option value='" + unassgined.id + "'>" + unassgined.name + "</option>");
+                        }
+                        for (let i = 0; i < assignedRoleList.length; i++) {
+                            var assgined = assignedRoleList[i];
+                            $("#assigned").append("<option value='" + assgined.id + "'>" + assgined.name + "</option>");
+
+                        }
+                    }
+                    if (result === "FAILED") {
+                        layer.msg("查询失败！" + response.message);
+                    }
+                },
+                "error": function (response) {
+                    layer.msg(response.status + " " + response.statusText);
+                }
+            });
+        });
+        // 左右移动
+        $("#toRightBtn").click(function () {
+            $("#unassigned>option:selected").appendTo("#assigned");
+        });
+        $("#toLeftBtn").click(function () {
+            $("#assigned>option:selected").appendTo("#unassigned");
+        });
+        // 执行保存
+        $("#saveAdminRoleRelationshipBtn").click(function () {
+            let roleIdList = [];
+            let assigned = $("#assigned>option")
+            for (let i = 0; i < assigned.length; i++) {
+                roleIdList.push(assigned[i].value);
+                //console.log(assigned[i].value);
+            }
+            //console.log(roleIdList);
+            let requestBody = JSON.stringify(roleIdList);
+            // console.log(requestBody);
+            // console.log(window.assginingAdminId);
+            $.ajax({
+                "url": "assign/save.json",
+                "type": "post",
+                "data": {
+                    "adminId": window.assginingAdminId,
+                    "roleIdList": requestBody
+                },
+                "dataType": "json",
+                "success": function (response) {
+                    var result = response.result;
+                    if (result === "SUCCESS") {
+                        layer.msg("分配成功！");
+                        // 重新加载分页数据
+                        // generatePage();
+                    }
+                    if (result === "FAILED") {
+                        layer.msg("分配失败！" + response.message);
+                    }
+                },
+                "error": function (response) {
+                    layer.msg(response.status + " " + response.statusText);
+                }
+            });
+            // 关闭模态框
+            $("#assginRoleModal").modal("hide");
         });
     });
 </script>
@@ -286,5 +366,6 @@
 <%@include file="/WEB-INF/modal-admin-confrim.jsp" %>
 <%@include file="/WEB-INF/modal-admin-add.jsp" %>
 <%@include file="/WEB-INF/modal-admin-edit.jsp" %>
+<%@include file="/WEB-INF/modal-assgin-role.jsp" %>
 </body>
 </html>

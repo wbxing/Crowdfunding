@@ -74,6 +74,23 @@
         select id, name from t_role
         where name like concat("%",#{keyword},"%")
     </select>
+    <select id="selectAssignedRole" resultMap="BaseResultMap">
+        select id, name from t_role
+        where id in (
+            select role_id
+            from inner_admin_role
+            where admin_id=#{adminId}
+        )
+    </select>
+    <select id="selectUnassignedRole" resultMap="BaseResultMap">
+        select id, name from t_role
+        where id not in (
+            select role_id
+            from inner_admin_role
+            where admin_id=#{adminId}
+        )
+    </select>
+
     <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.crowd.entity.RoleExample">
         select
         <if test="distinct">

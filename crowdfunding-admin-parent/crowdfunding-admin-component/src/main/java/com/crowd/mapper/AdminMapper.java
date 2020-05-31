@@ -29,4 +29,8 @@ public interface AdminMapper {
     int updateByPrimaryKey(Admin record);
 
     List<Admin> selectAdminByKeyword(String keyword);
+
+    void deleteRelationship(Integer adminId);
+
+    void insertRelationship(@Param("adminId") Integer adminId, @Param("roleIdList") List<String> roleIdList);
 }

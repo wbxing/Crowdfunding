@@ -72,8 +72,8 @@ function fillTableBody(pageInfo) {
 	$("#Pagination").empty();
 	$("#summaryBox").prop("checked", false);
 	// 判断 pageInfo 对象是否有效
-	if (pageInfo == null || pageInfo == undefined || pageInfo.list == null
-			|| pageInfo.list.length == 0) {
+	if (pageInfo === null || pageInfo === undefined || pageInfo.list === null
+			|| pageInfo.list.length === 0) {
 		$("#adminPageBody").append(
 				"<tr><td colspan='6' align='center'>抱歉！没有查询到您搜索的数据！</td></tr>");
 		return;
@@ -92,7 +92,7 @@ function fillTableBody(pageInfo) {
 		let adminUserName = "<td>" + adminName + "</td>";
 		let adminEmail = "<td>" + email + "</td>";
 
-		let checkBtn = "<button type='button' class='btn btn-success btn-xs checkBtn' title='选择'><i class=' glyphicon glyphicon-check'></i></button>";
+		let checkBtn = "<button id='" + adminId + "' type='button' class='btn btn-success btn-xs checkBtn' title='分配角色'><i class=' glyphicon glyphicon-check'></i></button>";
 		let pencilBtn = "<button id='" + adminId + "' type='button' class='btn btn-primary btn-xs pencilBtn' title='修改'><i class=' glyphicon glyphicon-pencil'></i></button>";
 		let removeBtn = "<button id='" + adminId + "' type='button' class='btn btn-danger btn-xs removeBtn' title='删除'><i class=' glyphicon glyphicon-remove'></i></button>";
 
