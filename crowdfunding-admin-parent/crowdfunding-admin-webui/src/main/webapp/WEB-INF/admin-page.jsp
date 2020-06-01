@@ -51,7 +51,7 @@
                 "dataType": "json",
                 "success": function (response) {
                     var result = response.result;
-                    if (result == "SUCCESS") {
+                    if (result === "SUCCESS") {
                         layer.msg("操作成功！");
                         // 将页码定位到最后一页
                         window.pageNum = getTotalPages(getPageInfoRemote()) + 1;
@@ -65,7 +65,7 @@
                         $("#addAdminModal [name=userName]").val("");
                         $("#addAdminModal [name=email]").val("");
                     }
-                    if (result == "FAILED") {
+                    if (result === "FAILED") {
                         layer.msg("操作失败！" + response.message);
                     }
                 },
@@ -144,12 +144,12 @@
                 "dataType": "json",
                 "success": function (response) {
                     var result = response.result;
-                    if (result == "SUCCESS") {
+                    if (result === "SUCCESS") {
                         layer.msg("操作成功！");
                         // 重新加载分页数据
                         generatePage();
                     }
-                    if (result == "FAILED") {
+                    if (result === "FAILED") {
                         layer.msg("操作失败！" + response.message);
                     }
                 },
@@ -213,7 +213,7 @@
         // 打开模态框
         $("#adminPageBody").on("click", ".checkBtn", function () {
             // 打开模态框
-            $("#assginRoleModal").modal("show");
+            $("#assignRoleModal").modal("show");
             // 清除旧数据
             $("#assigned").empty();
             $("#unassigned").empty();
@@ -295,7 +295,7 @@
                 }
             });
             // 关闭模态框
-            $("#assginRoleModal").modal("hide");
+            $("#assignRoleModal").modal("hide");
         });
     });
 </script>
@@ -366,6 +366,6 @@
 <%@include file="/WEB-INF/modal-admin-confrim.jsp" %>
 <%@include file="/WEB-INF/modal-admin-add.jsp" %>
 <%@include file="/WEB-INF/modal-admin-edit.jsp" %>
-<%@include file="/WEB-INF/modal-assgin-role.jsp" %>
+<%@include file="/WEB-INF/modal-assign-role.jsp" %>
 </body>
 </html>
