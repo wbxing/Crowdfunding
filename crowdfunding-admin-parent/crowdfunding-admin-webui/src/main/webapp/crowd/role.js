@@ -62,8 +62,8 @@ function fillTableBody(pageInfo) {
         let numberTd = "<td>" + (i + 1) + "</td>";
         let checkboxId = "<td><input id='" + roleId + "' class='itemBox' type='checkbox'></td>";
         let roleNameTd = "<td>" + roleName + "</td>";
-        let checkBtn = "<button type='button' class='btn btn-success btn-xs checkBtn' title='选择'><i class='" +
-            " glyphicon glyphicon-check'></i></button>";
+        let checkBtn = "<button id='" + roleId + "' type='button' class='btn btn-success btn-xs checkBtn' title='选择'>" +
+            "<i class=' glyphicon glyphicon-check'></i></button>";
         let pencilBtn = "<button id='" + roleId + "' type='button' class='btn btn-primary btn-xs pencilBtn'" +
             " title='修改'><i class='glyphicon glyphicon-pencil'></i></button>";
         let removeBtn = "<button id='" + roleId + "' type='button' class='btn btn-danger btn-xs removeBtn'" +
@@ -126,5 +126,89 @@ function showConfirmModal(roleArray) {
         $("#roleNameSpan").append(roleName + "<br/>");
         let roleId = role.id;
         window.roleIdArray.push(roleId);
+    }
+}
+
+// 在 Auth 模态框中加载树形结构数据
+function fillAuthTree() {
+    // 发送 ajax 请求查询 Auth 数据
+    let ajaxResult = $.ajax({
+        "url": "assign/get/all/auth.json",
+        "type": "post",
+        "dataType": "json",
+        "async": false
+    });
+    // 判断当前响应状态码是否为200
+    let statusCode = ajaxResult.status;
+    // 如果当前响应状态码不是 200，说明发生了错误或其他意外情况，显示提示消息，让当前函数停止执行
+    if (statusCode !== 200) {
+        layer.msg("失败！响应状态码=" + statusCode + " 说明信息=" + ajaxResult.statusText);
+        return;
+    }
+    // 如果响应状态码是 200，说明请求处理成功，获取 pageInfo
+    // 此时说明服务器相应成功
+    let resultEntity = ajaxResult.responseJSON;
+    // 从 resultEntity 中获取 result 属性
+    let result = resultEntity.result;
+    // 逻辑上判断 result 是否成功
+    if (result === "FAILED") {
+        layer.msg(resultEntity.message);
+        return;
+    }
+
+    // 从响应数据中获取 auth 信息
+    let authList = resultEntity.data;
+    // 准备对 zTree 进行设置的 json 对象
+    let setting = {
+        data: {
+            "simpleData": {
+                // 开启简单 json 功能
+                "enable": true,
+                // 使用categoryId 属性关联父节点，不用默认的pId 了
+                "pIdKey": "categoryId"
+            },
+            "key": {
+                // 使用title 属性显示节点名称，不用默认的name 作为属性名了
+                "name": "title"
+            }
+        },
+        "check": {
+            "enable": true
+        }
+    };
+    // 生成树形结构
+    $.fn.zTree.init($("#authTreeDemo"), setting, authList);
+    // 获取zTreeObj 对象
+    let zTreeObj = $.fn.zTree.getZTreeObj("authTreeDemo");
+    // 调用zTreeObj 对象的方法，把节点展开
+    zTreeObj.expandAll(true);
+    // 查询已经分配的 Auth 的 id 组成
+    ajaxResult = $.ajax({
+        "url": "assign/get/assigned/auth/id/by/role/id.json",
+        "type": "post",
+        "data": {
+            "roleId": window.roleId
+        },
+        "dataType": "json",
+        "async": false
+    });
+    // 判断当前响应状态码是否为200
+    statusCode = ajaxResult.status;
+    // 如果当前响应状态码不是 200，说明发生了错误或其他意外情况，显示提示消息，让当前函数停止执行
+    if (statusCode !== 200) {
+        layer.msg("失败！响应状态码=" + statusCode + " 说明信息=" + ajaxResult.statusText);
+        return;
+    }
+    let authIdArray = ajaxResult.responseJSON.data;
+    // 根据 authIdArray 把树形结构中对应的节点勾选上
+    for (let i = 0; i < authIdArray.length; i++) {
+        let authId = authIdArray[i];
+        let treeNode = zTreeObj.getNodeByParam("id", authId);
+        console.log(treeNode);
+        // checked = true 表示勾选节点
+        let checked = true;
+        // checkTypeFlag = false 表示只修改此节点勾选状态，无任何勾选联动操作
+        let checkTypeFlag = false;
+        zTreeObj.checkNode(treeNode, checked, checkTypeFlag);
     }
 }

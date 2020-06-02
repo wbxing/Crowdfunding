@@ -4,6 +4,8 @@
 <%@include file="/WEB-INF/include-head.jsp" %>
 <link rel="stylesheet" href="css/pagination.css"/>
 <script type="text/javascript" src="jquery/jquery.pagination.js"></script>
+<link rel="stylesheet" href="ztree/zTreeStyle.css"/>
+<script type="text/javascript" src="ztree/jquery.ztree.all-3.5.min.js"></script>
 <script type="text/javascript" src="crowd/role.js"></script>
 <script type="text/javascript">
     $(function () {
@@ -111,15 +113,15 @@
         });
 
         // 执行删除
-        $("#removeRoleBtn").click(function() {
+        $("#removeRoleBtn").click(function () {
             var requestBody = JSON.stringify(window.roleIdArray);
             $.ajax({
-                "url" : "role/remove.json",
-                "type" : "post",
-                "data" : requestBody,
-                "contentType" : "application/json;charset=UTF-8",
-                "dataType" : "json",
-                "success" : function(response) {
+                "url": "role/remove.json",
+                "type": "post",
+                "data": requestBody,
+                "contentType": "application/json;charset=UTF-8",
+                "dataType": "json",
+                "success": function (response) {
                     var result = response.result;
                     if (result === "SUCCESS") {
                         layer.msg("操作成功！");
@@ -130,7 +132,7 @@
                         layer.msg("操作失败！" + response.message);
                     }
                 },
-                "error" : function(response) {
+                "error": function (response) {
                     layer.msg(response.status + " " + response.statusText);
                 }
             });
@@ -139,14 +141,14 @@
         });
 
         // 单条删除
-        $("#rolePageBody").on("click", ".removeBtn", function() {
+        $("#rolePageBody").on("click", ".removeBtn", function () {
             // 获取 name
             var name = $(this).parent().prev().text()
             // 创建 role 对象，存入数组
-            var roleArray = [ {
-                id : this.id,
-                name : name
-            } ];
+            var roleArray = [{
+                id: this.id,
+                name: name
+            }];
             // 调用函数显示模态框
             console.log("name = " + name);
             console.log("id = " + this.id);
@@ -190,12 +192,57 @@
         });
 
         // checked 按钮
-        $("#rolePageBody").on("click", ".checkBtn", function() {
-            var checkBox = $(this).parent().parent().find(":checkbox");
-            //console.log(checkBox);
-            var status = checkBox[0].checked;
-            //console.log(status);
-            $(checkBox[0]).prop("checked", !status);
+        $("#rolePageBody").on("click", ".checkBtn", function () {
+            window.roleId = this.id;
+            // 打开模态框
+            $("#assignAuthModal").modal("show");
+            // 显示 Auth 的树形结构
+            fillAuthTree();
+        });
+
+        // 给分配权限模态框中的“分配”按钮绑定单击响应函数
+        $("#assignAuthBtn").click(function () {
+            // 收集树形结构的各个节点中被勾选的节点
+            // 声明一个专门的数组存放id
+            let authIdArray = [];
+            // 获取 zTreeObj 对象
+            let zTreeObj = $.fn.zTree.getZTreeObj("authTreeDemo");
+            // 获取全部被勾选的节点
+            let checkedNodes = zTreeObj.getCheckedNodes();
+            // 遍历checkedNodes
+            for (let i = 0; i < checkedNodes.length; i++) {
+                let checkedNode = checkedNodes[i];
+                let authId = checkedNode.id;
+                authIdArray.push(authId);
+            }
+            // 发送请求执行分配
+            let requestBody = {
+                "authIdArray": authIdArray,
+                // 为了服务器端 controller 方法能够统一使用List<Integer>方式接收数据，roleId 也存入数组
+                "roleId": [window.roleId]
+            };
+            requestBody = JSON.stringify(requestBody);
+
+            $.ajax({
+                "url": "assign/do/role/assign/auth.json",
+                "type": "post",
+                "data": requestBody,
+                "contentType": "application/json;charset=UTF-8",
+                "dataType": "json",
+                "success": function (response) {
+                    let result = response.result;
+                    if (result === "SUCCESS") {
+                        layer.msg("操作成功");
+                    }
+                    if (result === "FAILED") {
+                        layer.msg("操作失败: " + response.message);
+                    }
+                },
+                "error": function (response) {
+                    layer.msg(response.status + " " + response.statusText);
+                }
+            });
+            $("#assignAuthModal").modal("hide");
         });
     });
 </script>
@@ -225,7 +272,8 @@
                             <i class="glyphicon glyphicon-search"></i> 查询
                         </button>
                     </form>
-                    <button id="batchRemoveBtn" type="button" class="btn btn-danger" style="float: right; margin-left: 10px;">
+                    <button id="batchRemoveBtn" type="button" class="btn btn-danger"
+                            style="float: right; margin-left: 10px;">
                         <i class=" glyphicon glyphicon-remove"></i> 删除
                     </button>
                     <button type="button" class="btn btn-primary" style="float: right;"
@@ -263,6 +311,7 @@
 </div>
 <%@include file="/WEB-INF/modal-role-add.jsp" %>
 <%@include file="/WEB-INF/modal-role-edit.jsp" %>
-<%@include file="/WEB-INF/modal-role-confrim.jsp"%>
+<%@include file="/WEB-INF/modal-role-confrim.jsp" %>
+<%@include file="/WEB-INF/modal-assign-auth.jsp" %>
 </body>
 </html>
