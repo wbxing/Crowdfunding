@@ -42,11 +42,19 @@ public class AssignController {
     }
 
     @ResponseBody
-    @RequestMapping("/assign/save.json")
+    @RequestMapping("/assign/save/role.json")
     public ResultEntity<String> saveAdminRoleRelationship(@RequestParam("adminId") Integer adminId,
                                                           @RequestParam("roleIdList") String roleIdList) {
-        String[] strings = roleIdList.substring(2, roleIdList.length() - 2).split("\",\"");
-        List<String> roleId = Arrays.asList(strings);
+        String[] strings;
+        List<String> roleId;
+        if (roleIdList.length() > 4) {
+
+            strings = roleIdList.substring(2, roleIdList.length() - 2).split("\",\"");
+            roleId = Arrays.asList(strings);
+        System.out.println("************************************************");
+        } else {
+            roleId = null;
+        }
         adminService.saveAdminRoleRelationship(adminId, roleId);
         return ResultEntity.successWithoutData();
     }

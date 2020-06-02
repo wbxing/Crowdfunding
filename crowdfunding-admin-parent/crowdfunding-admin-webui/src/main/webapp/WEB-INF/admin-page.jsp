@@ -34,13 +34,13 @@
             // #addModal 表示找到整个模态框
             // 空格表示在后代元素中继续查找
             // [name=roleName]表示匹配name 属性等于roleName 的元素
-            var loginAcct = $.trim($("#addAdminModal [name=loginAcct]").val());
-            var userPswd = $.trim($("#addAdminModal [name=userPswd]").val());
-            var userName = $.trim($("#addAdminModal [name=userName]").val());
-            var email = $.trim($("#addAdminModal [name=email]").val());
+            let loginAcct = $.trim($("#addAdminModal [name=loginAcct]").val());
+            let userPswd = $.trim($("#addAdminModal [name=userPswd]").val());
+            let userName = $.trim($("#addAdminModal [name=userName]").val());
+            let email = $.trim($("#addAdminModal [name=email]").val());
             // 发送Ajax 请求
             $.ajax({
-                "url": "admin/save.json",
+                "url": "assign/save/role.json",
                 "type": "post",
                 "data": {
                     "loginAcct": loginAcct,
@@ -85,9 +85,9 @@
             // 打开模态框
             $("#editAdminModal").modal("show");
             // 获取表格中当前行中的数据
-            var acct = $(this).parent().prev().prev().prev().text();
-            var name = $(this).parent().prev().prev().text();
-            var email = $(this).parent().prev().text();
+            let acct = $(this).parent().prev().prev().prev().text();
+            let name = $(this).parent().prev().prev().text();
+            let email = $(this).parent().prev().text();
             // 获取当前角色的 id
             // 为了让执行更新的按钮能够获取到 roleId 的值，把它放在全局变量上
             window.adminId = this.id;
@@ -100,9 +100,9 @@
         // 给更新模态框中的更新按钮绑定单击响应函数
         $("#updateAdminBtn").click(function () {
             // 从文本框中获取新的角色名称
-            var loginAcct = $.trim($("#editAdminModal [name=loginAcct]").val());
-            var userName = $.trim($("#editAdminModal [name=userName]").val());
-            var email = $.trim($("#editAdminModal [name=email]").val());
+            let loginAcct = $.trim($("#editAdminModal [name=loginAcct]").val());
+            let userName = $.trim($("#editAdminModal [name=userName]").val());
+            let email = $.trim($("#editAdminModal [name=email]").val());
             // 发送Ajax 请求执行更新
             $.ajax({
                 "url": "admin/update.json",
@@ -115,7 +115,7 @@
                 },
                 "dataType": "json",
                 "success": function (response) {
-                    var result = response.result;
+                    let result = response.result;
                     if (result === "SUCCESS") {
                         layer.msg("操作成功！");
                         // 重新加载分页数据
@@ -135,7 +135,7 @@
 
         // 执行删除
         $("#removeadminBtn").click(function () {
-            var requestBody = JSON.stringify(window.adminIdArray);
+            let requestBody = JSON.stringify(window.adminIdArray);
             $.ajax({
                 "url": "admin/remove.json",
                 "type": "post",
@@ -143,7 +143,7 @@
                 "contentType": "application/json;charset=UTF-8",
                 "dataType": "json",
                 "success": function (response) {
-                    var result = response.result;
+                    let result = response.result;
                     if (result === "SUCCESS") {
                         layer.msg("操作成功！");
                         // 重新加载分页数据
@@ -164,9 +164,9 @@
         // 单条删除
         $("#adminPageBody").on("click", ".removeBtn", function () {
             // 获取 name
-            var name = $(this).parent().prev().prev().text();
+            let name = $(this).parent().prev().prev().text();
             // 创建 admin 对象，存入数组
-            var adminArray = [{
+            let adminArray = [{
                 "adminId": this.id,
                 "adminName": name
             }];
@@ -226,19 +226,19 @@
                 },
                 "dataType": "json",
                 "success": function (response) {
-                    var result = response.result;
-                    var data = response.data;
-                    var assignedRoleList = data.assignedRoleList
-                    var unassignedRoleList = data.unassignedRoleList
+                    let result = response.result;
+                    let data = response.data;
+                    let assignedRoleList = data.assignedRoleList
+                    let unassignedRoleList = data.unassignedRoleList
                     if (result === "SUCCESS") {
                         //layer.msg("查询成功！");
                         //$("#assgin").
                         for (let i = 0; i < unassignedRoleList.length; i++) {
-                            var unassgined = unassignedRoleList[i];
+                            let unassgined = unassignedRoleList[i];
                             $("#unassigned").append("<option value='" + unassgined.id + "'>" + unassgined.name + "</option>");
                         }
                         for (let i = 0; i < assignedRoleList.length; i++) {
-                            var assgined = assignedRoleList[i];
+                            let assgined = assignedRoleList[i];
                             $("#assigned").append("<option value='" + assgined.id + "'>" + assgined.name + "</option>");
 
                         }
@@ -280,7 +280,7 @@
                 },
                 "dataType": "json",
                 "success": function (response) {
-                    var result = response.result;
+                    let result = response.result;
                     if (result === "SUCCESS") {
                         layer.msg("分配成功！");
                         // 重新加载分页数据
