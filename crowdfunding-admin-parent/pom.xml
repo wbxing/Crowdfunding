@@ -166,6 +166,14 @@
                 <artifactId>spring-security-taglibs</artifactId>
                 <version>${crowd.spring.security.version}</version>
             </dependency>
+
+            <!-- SpringSecurity 配置 -->
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${crowd.spring.security.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
