@@ -36,17 +36,17 @@
     <mvc:view-controller path="/menu/to/page.html" view-name="menu-page"/>
 
     <!-- 配置拦截器 -->
-    <mvc:interceptors>
+    <!--<mvc:interceptors>
         <mvc:interceptor>
-            <!-- 需要拦截的资源 -->
-            <!-- /** 表示拦截多层路径 -->
+            &lt;!&ndash; 需要拦截的资源 &ndash;&gt;
+            &lt;!&ndash; /** 表示拦截多层路径 &ndash;&gt;
             <mvc:mapping path="/**"/>
-            <!-- 不拦截的资源 -->
+            &lt;!&ndash; 不拦截的资源 &ndash;&gt;
             <mvc:exclude-mapping path="/admin/to/login/page.html"/>
             <mvc:exclude-mapping path="/admin/do/login.html"/>
             <mvc:exclude-mapping path="/admin/do/logout.html"/>
-            <!-- 配置拦截器的类 -->
+            &lt;!&ndash; 配置拦截器的类 &ndash;&gt;
             <bean class="com.crowd.mvc.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 </beans>

@@ -18,6 +18,13 @@ import java.io.IOException;
 @ControllerAdvice
 public class CrowdExceptionResolver {
 
+    @ExceptionHandler(value = Exception.class)
+    public ModelAndView resolveException(Exception exception, HttpServletRequest request,
+                                         HttpServletResponse response) throws IOException {
+        String viewName = "admin-login";
+        return commonResolveException(exception, request, response, viewName);
+    }
+
     // 每一种异常对应一种处理方法
     // 加上这个可以指定未登录时权限检查的跳转页面
 //    @ExceptionHandler(value = AccessForbiddenException.class)

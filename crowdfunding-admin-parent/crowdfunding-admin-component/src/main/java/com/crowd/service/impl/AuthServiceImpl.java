@@ -14,8 +14,11 @@ import com.crowd.service.api.AuthService;
 @Service
 public class AuthServiceImpl implements AuthService {
     
-    @Autowired
-    private AuthMapper authMapper;
+    private final AuthMapper authMapper;
+
+    public AuthServiceImpl(AuthMapper authMapper) {
+        this.authMapper = authMapper;
+    }
 
     @Override
     public List<Auth> getAll() {
@@ -41,4 +44,8 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
+    public List<String> getAssignedAuthNameByAdminId(Integer adminId) {
+        return authMapper.selectAssignedAuthNameByAdminId(adminId);
+    }
 }

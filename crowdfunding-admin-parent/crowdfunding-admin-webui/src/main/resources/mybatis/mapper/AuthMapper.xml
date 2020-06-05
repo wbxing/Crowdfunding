@@ -71,6 +71,15 @@
         id, name, title, category_id
     </sql>
 
+    <select id="selectAssignedAuthNameByAdminId" resultType="string">
+        select distinct t_auth.name
+        from t_auth
+                 left join inner_role_auth on t_auth.id=inner_role_auth.auth_id
+                 left join inner_admin_role on
+            inner_admin_role.role_id=inner_role_auth.role_id
+        where inner_admin_role.admin_id=#{adminId}
+          and t_auth.name != "" and t_auth.name is not null
+    </select>
     <select id="selectAssignedAuthIdByRoleId" resultType="int">
         select auth_id from inner_role_auth where role_id=#{roleId}
     </select>
