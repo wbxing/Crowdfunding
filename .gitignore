@@ -28,3 +28,6 @@ hs_err_pid*
 
 /crowdfunding-admin-parent/crowdfunding-admin-webui/src/main/resources/jdbc.properties
 /crowdfunding-admin-parent/crowdfunding-admin-webui/target/
+/crowdfunding-member-parent/crowdfunding-member-redis-provider/src/main/resources/application.yml
+*/target/*
+/target/
