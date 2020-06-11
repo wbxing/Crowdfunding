@@ -10,3 +10,14 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:1000/eureka
+short:
+  message:
+    appcode: Your Code
+    host: Your host
+    method: GET
+    path: Your path
+    sign: 1
+    skin: 17
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeOut: 10000

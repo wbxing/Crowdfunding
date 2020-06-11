@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.crowd.entity.po.MemberPO;
@@ -31,5 +32,13 @@ public class MemberServiceImpl implements MemberService {
         List<MemberPO> list = memberPOMapper.selectByExample(example);
         // 获取结果，账户唯一，只能查到一个
         return list.get(0);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW,
+            rollbackFor = Exception.class,
+            readOnly = false)
+    @Override
+    public void saveMember(MemberPO memberPO) {
+        memberPOMapper.insertSelective(memberPO);
     }
 }

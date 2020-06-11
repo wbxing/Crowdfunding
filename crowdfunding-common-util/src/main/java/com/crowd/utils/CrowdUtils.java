@@ -1,11 +1,16 @@
 package com.crowd.utils;
 
+import com.aliyun.api.gateway.demo.util.HttpUtils;
 import com.crowd.constant.CrowdConstant;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CrowdUtils {
 
@@ -57,5 +62,51 @@ public class CrowdUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 请求发送验证码的方法
+     *
+     * @param host    短信接口调用的 URL 地址
+     * @param path    具体发送短信功能的地址
+     * @param method  请求方式
+     * @param phone   接收验证码的手机号
+     * @param appcode 第三方 appCOde
+     * @param sign    短信签名
+     * @param skin    短信模板
+     * @return 返回结果是否成功以及失败的消息：状态码: 200 正常；400 URL无效；401 appCode错误； 403 次数用完； 500 API网管错误
+     */
+    public static ResultEntity<String> sendShortMessage(String host, String path,
+                                                        String method, String appcode,
+                                                        String phone, String sign,
+                                                        String skin) {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Authorization", "APPCODE " + appcode);
+        Map<String, String> querys = new HashMap<String, String>();
+        // 生成验证码
+        StringBuilder stringBuilder = new StringBuilder();
+        // 6 位
+        for (int i = 0; i < 6; i++) {
+            int random = (int) (Math.random() * 10);
+            stringBuilder.append(random);
+        }
+        String code = stringBuilder.toString();
+        querys.put("code", code);
+        querys.put("phone", phone);
+        querys.put("sign", sign);
+        querys.put("skin", skin);
+        try {
+            HttpResponse response = HttpUtils.doGet(host, path, method, headers, querys);
+            StatusLine statusLine = response.getStatusLine();
+            int statusCode = statusLine.getStatusCode();
+            String reasonPhrase = statusLine.getReasonPhrase();
+            if (statusCode == 200) {
+                return ResultEntity.successWithData(code);
+            }
+            return ResultEntity.failed(reasonPhrase);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultEntity.failed(e.getMessage());
+        }
     }
 }

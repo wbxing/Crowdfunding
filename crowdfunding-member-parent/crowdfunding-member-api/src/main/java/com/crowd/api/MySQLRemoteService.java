@@ -10,4 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface MySQLRemoteService {
     @RequestMapping("/get/memberpo/by/login/acct/remote")
     ResultEntity<MemberPO> getMemberPOByLoginAcctRemote(@RequestParam("loginacct") String loginacct);
+
+    @RequestMapping("/save/member/remote")
+    ResultEntity<String> saveMember(MemberPO memberPO);
 }
