@@ -5,6 +5,7 @@ import com.crowd.api.RedisRemoteService;
 import com.crowd.config.ShortMessageProperties;
 import com.crowd.constant.CrowdConstant;
 import com.crowd.entity.po.MemberPO;
+import com.crowd.entity.vo.MemberLoginVO;
 import com.crowd.entity.vo.MemberVO;
 import com.crowd.utils.CrowdUtils;
 import com.crowd.utils.ResultEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -101,4 +103,48 @@ public class MemberController {
         }
     }
 
+    @RequestMapping("/auth/member/do/login")
+    public String login(@RequestParam("loginacct") String loginacct,
+                        @RequestParam("userpswd") String userpswd,
+                        ModelMap modelMap, HttpSession session) {
+
+        ResultEntity<MemberPO> memberEntity =
+                mySQLRemoteService.getMemberPOByLoginAcctRemote(loginacct);
+        // 判断是否查询成功
+        if (ResultEntity.FAILED.equals(memberEntity.getResult())) {
+            modelMap.addAttribute(CrowdConstant.ATTR_NAME_MESSAGE,
+                    memberEntity.getMessage());
+            return "member-login";
+        }
+        // 查看是否查到用户
+        MemberPO member = memberEntity.getData();
+        if (member == null) {
+            modelMap.addAttribute(CrowdConstant.ATTR_NAME_MESSAGE,
+                    CrowdConstant.MESSAGE_LOGIN_FAILED);
+            return "member-login";
+        }
+        // 获取数据库中密码
+        String passwordDatabase = member.getUserpswd();
+        // 加密表单中的密码
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        // 比较密码，盐值随机
+        boolean matches = encoder.matches(userpswd, passwordDatabase);
+        if (!matches) {
+            modelMap.addAttribute(CrowdConstant.ATTR_NAME_MESSAGE,
+                    CrowdConstant.MESSAGE_LOGIN_FAILED);
+            return "member-login";
+        }
+        // 存入 Session 域
+        MemberLoginVO memberLoginVO = new MemberLoginVO(member.getId(),
+                member.getUsername(),
+                member.getEmail());
+        session.setAttribute(CrowdConstant.ATTR_NAME_MEMBER_NAME, memberLoginVO);
+        return "redirect:/auth/member/to/center/page";
+    }
+
+    @RequestMapping("/auth/member/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
 }
