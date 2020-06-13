@@ -6,6 +6,10 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
+  redis:
+    host: # Your Redis host
+  session:
+    store-type: redis
 eureka:
   client:
     service-url:

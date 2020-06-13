@@ -3,6 +3,10 @@ server:
 spring:
   application:
     name: crowd-zuul
+  redis:
+    host: # Your Redis host
+  session:
+    store-type: redis
 eureka:
   client:
     service-url:
