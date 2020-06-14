@@ -139,12 +139,12 @@ public class MemberController {
                 member.getUsername(),
                 member.getEmail());
         session.setAttribute(CrowdConstant.ATTR_NAME_MEMBER_NAME, memberLoginVO);
-        return "redirect:/auth/member/to/center/page";
+        return "redirect:http://www.crowd.com/auth/member/to/center/page";
     }
 
     @RequestMapping("/auth/member/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/";
+        return "redirect:http://www.crowd.com";
     }
 }

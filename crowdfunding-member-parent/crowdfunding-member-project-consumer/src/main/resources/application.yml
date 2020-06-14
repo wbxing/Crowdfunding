@@ -1,0 +1,7 @@
+aliyun:
+  oss:
+    access-key-id: # Your access-key
+    access-key-secret: # Your access-key-secret
+    bucket-domain: # Your bucket-domain
+    bucket-name: # bucket-name
+    end-point: http://oss-cn-shenzhen.aliyuncs.com

@@ -22,8 +22,12 @@
     </modules>
 
     <dependencyManagement>
-        <dependencies>
-            <!-- 导入SpringCloud 需要使用的依赖信息-->
+        <dependencies><!-- 导入SpringCloud 需要使用的依赖信息-->
+            <dependency>
+                <groupId>com.crowd</groupId>
+                <artifactId>crowdfunding-member-entity</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
