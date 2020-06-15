@@ -5,3 +5,19 @@ aliyun:
     bucket-domain: # Your bucket-domain
     bucket-name: # bucket-name
     end-point: http://oss-cn-shenzhen.aliyuncs.com
+server:
+  port: 5000
+spring:
+  application:
+    name: my-crowd-project
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  redis:
+    host: # Your Redis Host
+  session:
+    store-type: redis
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1000/eureka
