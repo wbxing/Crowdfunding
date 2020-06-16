@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import com.crowd.utils.CrowdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +21,7 @@ import com.crowd.entity.vo.MemberConfirmInfoVO;
 import com.crowd.entity.vo.MemberLoginVO;
 import com.crowd.entity.vo.ProjectVO;
 import com.crowd.entity.vo.ReturnVO;
+import com.crowd.utils.CrowdUtils;
 import com.crowd.utils.ResultEntity;
 
 @Controller
@@ -33,7 +33,8 @@ public class ProjectConsumerController {
     private MySQLRemoteService mySQLRemoteService;
 
     /**
-     * 
+     * 接收表单数据
+     *
      * @param projectVO         接收除了上传图片之外的其他普通数据
      * @param headerPicture     接收上传的头图
      * @param detailPictureList 接收上传的详情图片
@@ -44,7 +45,7 @@ public class ProjectConsumerController {
      */
     @RequestMapping("/create/project/information")
     public String saveProjectBasicInfo(ProjectVO projectVO, MultipartFile headerPicture,
-            List<MultipartFile> detailPictureList, HttpSession session, ModelMap modelMap) throws IOException {
+                                       List<MultipartFile> detailPictureList, HttpSession session, ModelMap modelMap) throws IOException {
         // 完成头图上传
         // 获取当前 headerPicture 对象是否为空
         boolean headerPictureIsEmpty = headerPicture.isEmpty();
@@ -69,7 +70,7 @@ public class ProjectConsumerController {
             modelMap.addAttribute(CrowdConstant.ATTR_NAME_MESSAGE, CrowdConstant.MESSAGE_HEADER_PIC_UPLOAD_FAILED);
             return "project-launch";
         }
-    
+
         // 上传详情图片
         // 创建一个用来存放详情图片路径的集合
         List<String> detailPicturePathList = new ArrayList<>();
@@ -105,7 +106,7 @@ public class ProjectConsumerController {
         }
         // 将存放了详情图片访问路径的集合存入ProjectVO 中
         projectVO.setDetailPicturePathList(detailPicturePathList);
-    
+
         // 后续操作
         // 将ProjectVO 对象存入Session 域
         session.setAttribute(CrowdConstant.ATTR_NAME_TEMPLE_PROJECT, projectVO);
@@ -116,8 +117,10 @@ public class ProjectConsumerController {
     // JavaScript代码：formData.append("returnPicture", file);
     // returnPicture是请求参数的名字
     // file是请求参数的值，也就是要上传的文件
+
     /**
-     * 
+     * 接收页面异步上传的图片
+     *
      * @param returnPicture 接收用户上传的文件
      * @return 返回上传的结果
      * @throws IOException IOException
@@ -126,81 +129,89 @@ public class ProjectConsumerController {
     @RequestMapping("/create/upload/return/picture.json")
     public ResultEntity<String> uploadReturnPicture(@RequestParam("returnPicture") MultipartFile returnPicture)
             throws IOException {
-        // 1.执行文件上传
+        // 执行文件上传
         ResultEntity<String> uploadReturnPicResultEntity = CrowdUtils.uploadFileToOss(ossProperties.getEndPoint(),
                 ossProperties.getAccessKeyId(), ossProperties.getAccessKeySecret(), returnPicture.getInputStream(),
                 ossProperties.getBucketName(), ossProperties.getBucketDomain(), returnPicture.getOriginalFilename());
-        // 2.返回上传的结果
+        // 返回上传的结果
         return uploadReturnPicResultEntity;
     }
 
+    /**
+     * 接收整个回报信息数据
+     *
+     * @param returnVO 表单属性
+     * @param session  Session域
+     * @return 返回操作结果
+     */
     @ResponseBody
     @RequestMapping("/create/save/return.json")
     public ResultEntity<String> saveReturn(ReturnVO returnVO, HttpSession session) {
         try {
-            // 1.从session 域中读取之前缓存的ProjectVO 对象
+            // 从 session 域中读取之前缓存的 ProjectVO 对象
             ProjectVO projectVO = (ProjectVO) session.getAttribute(CrowdConstant.ATTR_NAME_TEMPLE_PROJECT);
-            // 2.判断projectVO 是否为null
+            // 判断 projectVO 是否为 null
             if (projectVO == null) {
                 return ResultEntity.failed(CrowdConstant.MESSAGE_TEMPLE_PROJECT_MISSING);
             }
-            // 3.从projectVO 对象中获取存储回报信息的集合
+            // 从 projectVO 对象中获取存储回报信息的集合
             List<ReturnVO> returnVOList = projectVO.getReturnVOList();
-            // 4.判断returnVOList 集合是否有效
+
+            // 判断 returnVOList 集合是否有效
             if (returnVOList == null || returnVOList.size() == 0) {
-                // 5.创建集合对象对returnVOList 进行初始化
+                // 创建集合对象对 returnVOList 进行初始化
                 returnVOList = new ArrayList<>();
-                // 6.为了让以后能够正常使用这个集合，设置到projectVO 对象中
+                // 为了让以后能够正常使用这个集合，设置到 projectVO 对象中
                 projectVO.setReturnVOList(returnVOList);
             }
-            // 7.将收集了表单数据的returnVO 对象存入集合
+            // 将收集了表单数据的 returnVO 对象存入集合
             returnVOList.add(returnVO);
-            // 8.把数据有变化的ProjectVO 对象重新存入Session 域
-            // 以确保新的数据最终能够存入Redis
+            // 把数据有变化的 ProjectVO 对象重新存入 Session 域
+            // 以确保新的数据最终能够存入 Redis
             session.setAttribute(CrowdConstant.ATTR_NAME_TEMPLE_PROJECT, projectVO);
-            // 9.所有操作成功完成返回成功
+            // 所有操作成功完成返回成功
             return ResultEntity.successWithoutData();
         } catch (Exception e) {
             e.printStackTrace();
             return ResultEntity.failed(e.getMessage());
         }
     }
-    
+
     @RequestMapping("/create/confirm")
     public String saveConfirm(ModelMap modelMap, HttpSession session, MemberConfirmInfoVO memberConfirmInfoVO) {
-        
-        // 1.从Session域读取之前临时存储的ProjectVO对象
+
+        // 从 Session域读取之前临时存储的 ProjectVO 对象
         ProjectVO projectVO = (ProjectVO) session.getAttribute(CrowdConstant.ATTR_NAME_TEMPLE_PROJECT);
-        
-        // 2.如果projectVO为null
-        if(projectVO == null) {
+
+        // 如果 projectVO 为  null
+        if (projectVO == null) {
             throw new RuntimeException(CrowdConstant.MESSAGE_TEMPLE_PROJECT_MISSING);
         }
-        
-        // 3.将确认信息数据设置到projectVO对象中
+
+        // 将确认信息数据设置到 projectVO 对象中
         projectVO.setMemberConfirmInfoVO(memberConfirmInfoVO);
-        
-        // 4.从Session域读取当前登录的用户
-        MemberLoginVO memberLoginVO = (MemberLoginVO) session.getAttribute(CrowdConstant.ATTR_NAME_LOGIN_MEMBER);
-        
+
+        // 从 Session 域读取当前登录的用户
+        MemberLoginVO memberLoginVO = (MemberLoginVO) session.getAttribute(CrowdConstant.ATTR_NAME_MEMBER_NAME);
+
         Integer memberId = memberLoginVO.getId();
-        
-        // 5.调用远程方法保存projectVO对象
+
+        // 调用远程方法保存 projectVO对象
         ResultEntity<String> saveResultEntity = mySQLRemoteService.saveProjectVORemote(projectVO, memberId);
-        
-        // 6.判断远程的保存操作是否成功
+
+        // 判断远程的保存操作是否成功
         String result = saveResultEntity.getResult();
-        if(ResultEntity.FAILED.equals(result)) {
-            
+        if (ResultEntity.FAILED.equals(result)) {
+
             modelMap.addAttribute(CrowdConstant.ATTR_NAME_MESSAGE, saveResultEntity.getMessage());
-            
+
             return "project-confirm";
         }
-        
-        // 7.将临时的ProjectVO对象从Session域移除
+
+        // 将临时的 ProjectVO 对象从 Session 域移除
         session.removeAttribute(CrowdConstant.ATTR_NAME_TEMPLE_PROJECT);
-        
-        // 8.如果远程保存成功则跳转到最终完成页面
+
+        // 如果远程保存成功则跳转到最终完成页面
         return "redirect:http://www.crowd.com/project/create/success";
     }
 }

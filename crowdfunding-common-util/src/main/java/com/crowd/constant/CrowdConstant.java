@@ -20,7 +20,6 @@ public class CrowdConstant {
     public static final String ATTR_NAME_PAGE_INFO = "pageInfo";
     public static final String ATTR_NAME_ADMIN_NAME = "admin";
     public static final String ATTR_NAME_MEMBER_NAME = "member";
-    public static final String ATTR_NAME_LOGIN_MEMBER = "loginMember";
     public static final String ATTR_NAME_ASSIGNED_ROLE_NAME = "assignedRoleList";
     public static final String ATTR_NAME_UNASSIGNED_ROLE_NAME = "unassignedRoleList";
     public static final String ATTR_NAME_MESSAGE = "message";
