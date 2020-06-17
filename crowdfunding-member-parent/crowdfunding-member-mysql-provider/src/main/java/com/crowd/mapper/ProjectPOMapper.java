@@ -4,6 +4,7 @@ import com.crowd.entity.po.ProjectPO;
 import com.crowd.entity.po.ProjectPOExample;
 import java.util.List;
 
+import com.crowd.entity.vo.DetailProjectVO;
 import com.crowd.entity.vo.PortalTypeVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,4 +36,6 @@ public interface ProjectPOMapper {
     void insertTagRelationship( @Param("tagIdList") List<Integer> tagIdList, @Param("projectId") Integer projectId);
 
     List<PortalTypeVO> selectPortalTypeVOList();
+
+    DetailProjectVO selectDetailProjectVO(Integer projectId);
 }
