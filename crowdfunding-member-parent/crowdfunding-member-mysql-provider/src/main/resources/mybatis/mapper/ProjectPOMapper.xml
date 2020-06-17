@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.crowd.mapper.ProjectPOMapper">
+
+    <resultMap type="com.crowd.entity.vo.PortalTypeVO" id="loadPortalProjectListResultMap">
+        <!-- 分类数据的常规属性-->
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <!-- 分类数据中包含的项目数据的List -->
+        <!-- property 属性：对应 PortalTypeVO 中分类数据中的项目数据的 List 属性-->
+        <!-- column 属性：接下来查询项目时需要用到分类id，就是通过column 属性把值传入 -->
+        <!-- ofType 属性：项目数据的实体类型PortalProjectVO -->
+        <collection property="portalProjectVOList" column="id"
+                    ofType="com.crowd.entity.vo.PortalProjectVO"
+                    select="com.crowd.mapper.ProjectPOMapper.selectPortalProjectVOList"/>
+    </resultMap>
+    <select id="selectPortalTypeVOList" resultMap="loadPortalProjectListResultMap">
+        select id, name, remark
+        from t_type
+    </select>
+    <select id="selectPortalProjectVOList" resultType="com.crowd.entity.vo.PortalProjectVO">
+        SELECT t_project.id               projectId,
+               project_name               projectName,
+               money,
+               deploydate                 deployDate,
+               supportmoney / money * 100 percentage,
+               supporter                  supporter,
+               header_picture_path        headerPicturePath
+        FROM t_project
+                 LEFT JOIN t_project_type ON t_project.id = t_project_type.projectid
+        WHERE t_project_type.typeid = #{id}
+        ORDER BY t_project.id DESC
+        LIMIT 0,4
+    </select>
+
     <resultMap id="BaseResultMap" type="com.crowd.entity.po.ProjectPO">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="project_name" property="projectName" jdbcType="VARCHAR"/>

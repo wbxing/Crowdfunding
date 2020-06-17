@@ -22,6 +22,14 @@ CREATE TABLE t_tag
     PRIMARY KEY (id)
 );
 
+CREATE TABLE t_project_tag
+(
+    id        INT(11) NOT NULL auto_increment,
+    projectid INT(11),
+    tagid     INT(11),
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE t_project
 (
     id                  INT(11) NOT NULL auto_increment,
