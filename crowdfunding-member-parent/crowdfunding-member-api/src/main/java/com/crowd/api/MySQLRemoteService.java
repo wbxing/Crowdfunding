@@ -2,6 +2,7 @@ package com.crowd.api;
 
 import com.crowd.entity.po.MemberPO;
 import com.crowd.entity.vo.DetailProjectVO;
+import com.crowd.entity.vo.OrderProjectVO;
 import com.crowd.entity.vo.PortalTypeVO;
 import com.crowd.entity.vo.ProjectVO;
 import com.crowd.utils.ResultEntity;
@@ -29,5 +30,9 @@ public interface MySQLRemoteService {
     ResultEntity<List<PortalTypeVO>> getPortalTypeProjectDataRemote();
 
     @RequestMapping("/get/project/detail/remote/{projectId}")
-    public ResultEntity<DetailProjectVO> getDetailProjectVORemote(@PathVariable("projectId") Integer projectId);
+    ResultEntity<DetailProjectVO> getDetailProjectVORemote(@PathVariable("projectId") Integer projectId);
+
+    @RequestMapping("/get/order/project/vo/remote")
+    ResultEntity<OrderProjectVO> getOrderProjectVORemote(@RequestParam("projectId") Integer projectId,
+                                                         @RequestParam("returnId") Integer returnId);
 }
