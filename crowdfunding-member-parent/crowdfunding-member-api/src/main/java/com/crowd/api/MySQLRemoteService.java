@@ -1,10 +1,7 @@
 package com.crowd.api;
 
 import com.crowd.entity.po.MemberPO;
-import com.crowd.entity.vo.DetailProjectVO;
-import com.crowd.entity.vo.OrderProjectVO;
-import com.crowd.entity.vo.PortalTypeVO;
-import com.crowd.entity.vo.ProjectVO;
+import com.crowd.entity.vo.*;
 import com.crowd.utils.ResultEntity;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,4 +32,10 @@ public interface MySQLRemoteService {
     @RequestMapping("/get/order/project/vo/remote")
     ResultEntity<OrderProjectVO> getOrderProjectVORemote(@RequestParam("projectId") Integer projectId,
                                                          @RequestParam("returnId") Integer returnId);
+
+    @RequestMapping("/get/address/vo/remote")
+    ResultEntity<List<AddressVO>> getAddressVORemote(@RequestParam("memberId") Integer memberId);
+
+    @RequestMapping("save/address/remote")
+    ResultEntity<String> saveAddressRemote(@RequestBody AddressVO addressVO);
 }

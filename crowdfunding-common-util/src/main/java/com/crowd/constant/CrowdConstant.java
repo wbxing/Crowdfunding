@@ -27,6 +27,7 @@ public class CrowdConstant {
     public static final String ATTR_NAME_PORTAL_DATA = "portal_data";
     public static final String ATTR_NAME_DETAIL_PROJECT = "detailProjectVO";
     public static final String ATTR_NAME_ORDER_PROJECT = "orderProjectVO";
+    public static final String ATTR_NAME_ADDRESS_LIST_NAME = "addressVOList";
 
     public static final String REDIS_CODE_PREFIX = "REDIS_CODE_PREFIX_";
 }
