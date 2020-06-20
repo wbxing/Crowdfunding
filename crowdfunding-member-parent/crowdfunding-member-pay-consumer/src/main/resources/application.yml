@@ -1,0 +1,27 @@
+server:
+  port: 7000
+spring:
+  application:
+    name: my-crowd-pay
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  redis:
+    host: # Your Redis Host
+  session:
+    store-type: redis
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1000/eureka
+
+ali:
+  pay:
+    alipay-public-key: # Your alipay-public-key
+    app-id: # Your app-id
+    charset: utf-8
+    gateway-url: # Your gateway-url
+    merchant-private-key: # Your merchant-private-key
+    notify-url: # Your notify-url
+    return-url: # Your return-url
+    sign-type: RSA2

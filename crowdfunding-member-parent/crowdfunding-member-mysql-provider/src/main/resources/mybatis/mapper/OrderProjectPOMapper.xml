@@ -142,7 +142,7 @@
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="com.crowd.entity.po.OrderProjectPO">
+    <insert id="insert" parameterType="com.crowd.entity.po.OrderProjectPO" useGeneratedKeys="true" keyProperty="id">
         insert into t_order_project (id, project_name, launch_name,
                                      return_content, return_count, support_price,
                                      freight, order_id)

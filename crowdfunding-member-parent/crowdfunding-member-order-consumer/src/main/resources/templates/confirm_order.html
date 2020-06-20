@@ -95,6 +95,25 @@
                 }
             });
 
+            $("#payBtn").click(function () {
+                // 收集所有要提交的表单项的数据
+                var addressId = $("[name=addressId]:checked").val();
+                var invoice = $("[name=invoiceRadio]:checked").val();
+                var invoiceTitle = $.trim($("[name=invoiceTitle]").val());
+                var remark = $.trim($("[name=remark]").val());
+                console.log(addressId);
+                console.log(invoice);
+                console.log(invoiceTitle);
+                console.log(remark);
+                // 将上面收集到的表单数据填充到空表单中并提交
+                $("#summaryForm")
+                    .append("<input type='hidden' name='addressId' value='" + addressId + "'/>")
+                    .append("<input type='hidden' name='invoice' value='" + invoice + "'/>")
+                    .append("<input type='hidden' name='invoiceTitle' value='" + invoiceTitle + "'/>")
+                    .append("<input type='hidden' name='orderRemark' value='" + remark + "'/>")
+                    .submit();
+            });
+
         });
     </script>
 </head>
@@ -455,6 +474,7 @@
 
 </div>
 <!-- /container -->
-
+<!-- 为了收集当前页面中的所有数据，构造空表单 -->
+<form id="summaryForm" action="pay/generate/order" method="post"></form>
 </body>
 </html>

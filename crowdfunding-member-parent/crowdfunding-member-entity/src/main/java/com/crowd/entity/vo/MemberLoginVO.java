@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class MemberLoginVO implements Serializable {
 
-    private static final long serialVersionUID = 5388751590903940356L;
+    private static final long serialVersionUID = 1L;
     private Integer id;
     private String username;
     private String email;

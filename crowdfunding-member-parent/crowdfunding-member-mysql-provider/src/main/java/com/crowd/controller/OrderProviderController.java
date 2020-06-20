@@ -4,6 +4,7 @@ import com.crowd.constant.CrowdConstant;
 import com.crowd.entity.po.MemberPO;
 import com.crowd.entity.vo.AddressVO;
 import com.crowd.entity.vo.OrderProjectVO;
+import com.crowd.entity.vo.OrderVO;
 import com.crowd.service.api.MemberService;
 import com.crowd.service.api.OrderService;
 import com.crowd.utils.ResultEntity;
@@ -47,6 +48,17 @@ public class OrderProviderController {
 
         try {
             orderService.saveAddress(addressVO);
+            return ResultEntity.successWithoutData();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultEntity.failed(e.getMessage());
+        }
+    }
+
+    @RequestMapping("save/order/remote")
+    ResultEntity<String> saveOrderRemote(@RequestBody OrderVO orderVO) {
+        try {
+            orderService.saveOrder(orderVO);
             return ResultEntity.successWithoutData();
         } catch (Exception e) {
             e.printStackTrace();

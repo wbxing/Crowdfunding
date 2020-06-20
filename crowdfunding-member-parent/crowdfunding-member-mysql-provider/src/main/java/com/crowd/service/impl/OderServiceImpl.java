@@ -2,7 +2,10 @@ package com.crowd.service.impl;
 
 import com.crowd.entity.po.AddressPO;
 import com.crowd.entity.po.AddressPOExample;
+import com.crowd.entity.po.OrderPO;
+import com.crowd.entity.po.OrderProjectPO;
 import com.crowd.entity.vo.AddressVO;
+import com.crowd.entity.vo.OrderVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +61,22 @@ public class OderServiceImpl implements OrderService {
         BeanUtils.copyProperties(addressVO, addressPO);
 
         addressPOMapper.insert(addressPO);
+    }
+
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
+    @Override
+    public void saveOrder(OrderVO orderVO) {
+        OrderPO orderPO = new OrderPO();
+        BeanUtils.copyProperties(orderVO, orderPO);
+
+        OrderProjectPO orderProjectPO = new OrderProjectPO();
+        BeanUtils.copyProperties(orderVO.getOrderProjectVO(), orderProjectPO);
+
+        orderPOMapper.insert(orderPO);
+
+        Integer orderId = orderPO.getId();
+        System.out.println(orderId);
+        orderProjectPO.setOrderId(orderId);
+        orderProjectPOMapper.insert(orderProjectPO);
     }
 }
